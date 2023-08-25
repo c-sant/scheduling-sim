@@ -20,7 +20,7 @@ class Process:
     def __init__(
         self,
         name: str,
-        execution_time: int = 0,
+        execution_time: int = 1,
         priority_level: int = 1,
         arrival_time: int = 0,
     ):
@@ -33,6 +33,7 @@ class Process:
     def __repr__(self) -> str:
         return (
             "Process("
+            f"name='{self.name}', "
             f"execution_time={self.execution_time}, "
             f"priority_level={self.priority_level}, "
             f"arrival_time={self.arrival_time}"
@@ -76,11 +77,17 @@ class Process:
 
         Raises:
             TypeError: If the value is not an integer.
+            ValueError: If the value is less than 1.
         """
 
         if type(value) != int:
             raise TypeError(
                 f"process execution time should be an integer. Got {type(value)} instead."
+            )
+
+        if value < 1:
+            raise ValueError(
+                f"execution time should be higher than 0. Got {value} instead."
             )
 
         self._execution_time = value
