@@ -1,3 +1,37 @@
+######################
+# Process exceptions #
+######################
+
+
+class InvalidProcessNameError(ValueError):
+    """
+    Exception raised when an invalid process name is encountered.
+
+    This exception is raised when a process name does not meet the required naming criteria.
+
+    Attributes:
+        message (str): A custom error message describing the exception.
+        process_name (str): The invalid process name that triggered the exception.
+    """
+
+    def __init__(self, process_name, message="Invalid process name encountered."):
+        """
+        Initializes a new InvalidProcessNameError instance.
+
+        Args:
+            process_name (str): The invalid process name that triggered the exception.
+            message (str, optional): A custom error message describing the exception. Defaults to a generic message.
+        """
+        self.process_name = process_name
+        self.message = message
+        super().__init__(self.message)
+
+
+########################
+# Scheduler exceptions #
+########################
+
+
 class NoProcessWithArrivalTimeZeroError(Exception):
     """Exception raised when none of the processes have an arrival time of 0.
 

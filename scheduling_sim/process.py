@@ -1,9 +1,13 @@
+from scheduling_sim.exceptions import InvalidProcessNameError
+
+
 class Process:
     """The representation of a program in execution, a process is a lower-level
     concept associated with Operational Systems. They have their own memory space,
     system resources and execution context.
 
     Attributes:
+        name (str): The name of the process.
         execution_time (int): The time required for the process to complete execution.
         total_runtime (int): The total runtime of the process, which is the sum
         of execution and waiting time.
@@ -14,8 +18,13 @@ class Process:
     """
 
     def __init__(
-        self, execution_time: int = 0, priority_level: int = 1, arrival_time: int = 0
+        self,
+        name: str,
+        execution_time: int = 0,
+        priority_level: int = 1,
+        arrival_time: int = 0,
     ):
+        self.name = name
         self.execution_time = execution_time
         self.total_runtime = execution_time
         self.priority_level = priority_level
@@ -29,6 +38,29 @@ class Process:
             f"arrival_time={self.arrival_time}"
             ")"
         )
+
+    @property
+    def name(self) -> str:
+        """str: The name of the process."""
+        return self._name
+
+    @name.setter
+    def name(self, value: str) -> str:
+        """Sets the name of the process.
+
+        Args:
+            value (str): The name to set.
+
+        Raises:
+            InvalidProcessNameError: If the name is empty.
+        """
+
+        value = str(value).strip()
+
+        if value == "":
+            raise InvalidProcessNameError(value)
+
+        self._name = str(value)
 
     @property
     def execution_time(self) -> int:
