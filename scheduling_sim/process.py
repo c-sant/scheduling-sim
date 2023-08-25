@@ -1,10 +1,29 @@
 class Process:
+    """The representation of a program in execution, a process is a lower-level
+    concept associated with Operational Systems. They have their own memory space,
+    system resources and execution context.
+
+    In this implementation of a Scheduling simulation, an object of type Process
+    has a duration (the time it takes to be executed), a priority level and an
+    arrival time, which represents the moment the Process was added to the Scheduler's
+    queue.
+    """
+
     def __init__(
         self, duration: int = 0, priority_level: int = 1, arrival_time: int = 0
     ):
         self.duration = duration
         self.priority_level = priority_level
         self.arrival_time = arrival_time
+
+    def __repr__(self) -> str:
+        return (
+            "Process("
+            f"duration={self.duration}, "
+            f"priority_level={self.priority_level}, "
+            f"arrival_time={self.arrival_time}"
+            ")"
+        )
 
     @property
     def duration(self) -> int:
