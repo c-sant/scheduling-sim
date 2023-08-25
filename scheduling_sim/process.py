@@ -3,10 +3,14 @@ class Process:
     concept associated with Operational Systems. They have their own memory space,
     system resources and execution context.
 
-    In this implementation of a Scheduling simulation, an object of type Process
-    has an execution time (the time it takes to be executed), a priority level and
-    an arrival time, which represents the moment the Process was added to the Scheduler's
-    queue.
+    Attributes:
+        execution_time (int): The time required for the process to complete execution.
+        total_runtime (int): The total runtime of the process, which is the sum
+        of execution and waiting time.
+        priority_level (int): The priority level of the process, used in scheduling
+        algorithms.
+        arrival_time (int): The time at which the process arrives and becomes ready
+        for execution.
     """
 
     def __init__(
@@ -28,11 +32,20 @@ class Process:
 
     @property
     def execution_time(self) -> int:
-        """The execution time (duration) of the process."""
+        """int: The time required for the process to complete execution."""
         return self._execution_time
 
     @execution_time.setter
     def execution_time(self, value: int):
+        """Sets the execution time of the process.
+
+        Args:
+            value (int): The execution time to set.
+
+        Raises:
+            TypeError: If the value is not an integer.
+        """
+
         if type(value) != int:
             raise TypeError(
                 f"process execution time should be an integer. Got {type(value)} instead."
@@ -42,11 +55,21 @@ class Process:
 
     @property
     def priority_level(self) -> int:
-        """The level of priority a process has in a schedule."""
+        """int: The priority level of the process, used by scheduling algorithms."""
         return self._priority_level
 
     @priority_level.setter
     def priority_level(self, value: int):
+        """Sets the priority level of the process.
+
+        Args:
+            value (int): The priority level to set.
+
+        Raises:
+            TypeError: If the value is not an integer.
+            ValueError: If the value is less than 1.
+        """
+
         if type(value) != int:
             raise TypeError(
                 f"priority level should be an integer. Got {type(value)} instead."
@@ -61,11 +84,21 @@ class Process:
 
     @property
     def arrival_time(self) -> int:
-        """The instant the process should be added to the schedule's job queue."""
+        """int: The instant when the process arrives and becomes ready for execution."""
         return self._arrival_time
 
     @arrival_time.setter
     def arrival_time(self, value: int):
+        """Sets the arrival time of the process.
+
+        Args:
+            value (int): The arrival time to set.
+
+        Raises:
+            TypeError: If the value is not an integer.
+            ValueError: If the value is negative.
+        """
+
         if type(value) != int:
             raise TypeError(
                 f"arrival time should be an integer. Got {type(value)} instead."
@@ -78,11 +111,21 @@ class Process:
 
     @property
     def total_runtime(self) -> int:
-        """The total runtime the process needed to finish (execution time + waiting)."""
+        """int: The total runtime of the process, which is the sum of execution and waiting time."""
         return self._total_runtime
 
     @total_runtime.setter
     def total_runtime(self, value: int):
+        """Sets the total runtime of the process.
+
+        Args:
+            value (int): The total runtime to set.
+
+        Raises:
+            TypeError: If the value is not an integer.
+            ValueError: If the value is negative or lower than the execution time.
+        """
+
         if type(value) != int:
             raise TypeError(
                 f"total runtime should be an integer. Got {type(value)} instead."
