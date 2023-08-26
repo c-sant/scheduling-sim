@@ -1,4 +1,29 @@
+from enum import Enum
+
 from scheduling_sim.exceptions import InvalidProcessNameError
+
+
+class ProcessStatus(Enum):
+    """Enum representing the status of a process.
+
+    Attributes:
+        READY (str): The process is ready to execute.
+        RUNNING (str): The process is currently executing.
+        BLOCKED (str): The process is blocked and waiting for an event.
+        TERMINATED (str): The process has completed execution.
+    """
+
+    READY = "ready"
+    """The process is ready to execute"""
+
+    RUNNING = "running"
+    """The process is currently executing."""
+
+    BLOCKED = "blocked"
+    """The process is blocked and waiting for an event."""
+
+    TERMINATED = "terminated"
+    """The process has completed execution."""
 
 
 class Process:
@@ -18,6 +43,7 @@ class Process:
         wait_time (int): The time the process has spent waiting in the ready queue.
         remaining_execution_time (int): The time remaining for the process to complete
         execution.
+        status (ProcessStatus): The status of the process.
     """
 
     def __init__(
@@ -31,9 +57,9 @@ class Process:
         self.execution_time = execution_time
         self.priority_level = priority_level
         self.arrival_time = arrival_time
-
         self.wait_time = 0
         self.remaining_execution_time = self.execution_time
+        self.status = ProcessStatus.READY
 
     def __repr__(self) -> str:
         return (
@@ -213,3 +239,26 @@ class Process:
     def total_runtime(self) -> int:
         """int: The total runtime of the process, which is the sum of execution and waiting time."""
         return self.execution_time + self.wait_time
+
+    @property
+    def status(self) -> ProcessStatus:
+        """ProcessStatus: The status of the process."""
+        return self._status
+
+    @status.setter
+    def status(self, value: ProcessStatus):
+        """Sets the status of the process.
+
+        Args:
+            value (ProcessStatus): The status to set.
+
+        Raises:
+            ValueError: If the value is not a valid ProcessStatus enum.
+        """
+
+        if type(value) == ProcessStatus:
+            raise TypeError(
+                f"status should be a valid ProcessStatus value. Got {type(value)} instead."
+            )
+
+        self._status = value
