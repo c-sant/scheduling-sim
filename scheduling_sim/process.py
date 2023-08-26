@@ -15,6 +15,9 @@ class Process:
         algorithms.
         arrival_time (int): The time at which the process arrives and becomes ready
         for execution.
+        wait_time (int): The time the process has spent waiting in the ready queue.
+        remaining_execution_time (int): The time remaining for the process to complete
+        execution.
     """
 
     def __init__(
@@ -26,9 +29,11 @@ class Process:
     ):
         self.name = name
         self.execution_time = execution_time
-        self.total_runtime = execution_time
         self.priority_level = priority_level
         self.arrival_time = arrival_time
+
+        self.wait_time = 0
+        self.remaining_execution_time = self.execution_time
 
     def __repr__(self) -> str:
         return (
@@ -149,31 +154,62 @@ class Process:
         self._arrival_time = value
 
     @property
-    def total_runtime(self) -> int:
-        """int: The total runtime of the process, which is the sum of execution and waiting time."""
-        return self._total_runtime
+    def wait_time(self) -> int:
+        """int: The time the process has spent waiting in the ready queue."""
+        return self._wait_time
 
-    @total_runtime.setter
-    def total_runtime(self, value: int):
-        """Sets the total runtime of the process.
+    @wait_time.setter
+    def wait_time(self, value: int):
+        """Sets the wait time of the process.
 
         Args:
-            value (int): The total runtime to set.
+            value (int): The wait time to set.
 
         Raises:
             TypeError: If the value is not an integer.
-            ValueError: If the value is negative or lower than the execution time.
+            ValueError: If the value is negative.
         """
 
         if type(value) != int:
             raise TypeError(
-                f"total runtime should be an integer. Got {type(value)} instead."
+                f"wait time should be an integer. Got {type(value)} instead."
             )
 
         if value < 0:
-            raise ValueError(f"total runtime should be positive. Got {value} instead.")
+            raise ValueError(f"wait time should be positive. Got {value} instead.")
 
-        if value < self.execution_time:
-            raise ValueError("total runtime should not be lower than execution time.")
+        self._wait_time = value
 
-        self._total_runtime = value
+    @property
+    def remaining_execution_time(self) -> int:
+        """int: The time remaining for the process to complete execution."""
+        return self._remaining_execution_time
+
+    @remaining_execution_time.setter
+    def remaining_execution_time(self, value: int):
+        """Sets the remaining execution time of the process.
+
+        Args:
+            value (int): The remaining execution time to set.
+
+        Raises:
+            TypeError: If the value is not an integer.
+            ValueError: If the value is negative.
+        """
+
+        if type(value) != int:
+            raise TypeError(
+                f"remaining execution time should be an integer. Got {type(value)} instead."
+            )
+
+        if value < 0:
+            raise ValueError(
+                f"remaining execution time should be positive. Got {value} instead."
+            )
+
+        self._remaining_execution_time = value
+
+    @property
+    def total_runtime(self) -> int:
+        """int: The total runtime of the process, which is the sum of execution and waiting time."""
+        return self.execution_time + self.wait_time
