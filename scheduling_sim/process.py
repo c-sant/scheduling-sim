@@ -8,13 +8,17 @@ class ProcessStatus(Enum):
 
     Attributes:
         READY (str): The process is ready to execute.
+        WAITING (str): The process is waiting to execute.
         RUNNING (str): The process is currently executing.
         BLOCKED (str): The process is blocked and waiting for an event.
         TERMINATED (str): The process has completed execution.
     """
 
     READY = "ready"
-    """The process is ready to execute"""
+    """The process is ready to execute."""
+
+    WAITING = "waiting"
+    """The process is waiting to execute."""
 
     RUNNING = "running"
     """The process is currently executing."""
@@ -34,8 +38,7 @@ class Process:
     Attributes:
         name (str): The name of the process.
         execution_time (int): The time required for the process to complete execution.
-        total_runtime (int): The total runtime of the process, which is the sum
-        of execution and waiting time.
+        turnaround_time (int): The interval between arrival and completion time.
         priority_level (int): The priority level of the process, used in scheduling
         algorithms.
         arrival_time (int): The time at which the process arrives and becomes ready
@@ -57,19 +60,11 @@ class Process:
         self.execution_time = execution_time
         self.priority_level = priority_level
         self.arrival_time = arrival_time
-        self.wait_time = 0
-        self.remaining_execution_time = self.execution_time
-        self.status = ProcessStatus.READY
+
+        self.reset()
 
     def __repr__(self) -> str:
-        return (
-            "Process("
-            f"name='{self.name}', "
-            f"execution_time={self.execution_time}, "
-            f"priority_level={self.priority_level}, "
-            f"arrival_time={self.arrival_time}"
-            ")"
-        )
+        return f"Process({self.name})"
 
     @property
     def name(self) -> str:
@@ -113,12 +108,12 @@ class Process:
 
         if type(value) != int:
             raise TypeError(
-                f"process execution time should be an integer. Got {type(value)} instead."
+                f"Process execution time should be an integer. Got {type(value)} instead."
             )
 
         if value < 1:
             raise ValueError(
-                f"execution time should be higher than 0. Got {value} instead."
+                f"Execution time should be higher than 0. Got {value} instead."
             )
 
         self._execution_time = value
@@ -142,12 +137,12 @@ class Process:
 
         if type(value) != int:
             raise TypeError(
-                f"priority level should be an integer. Got {type(value)} instead."
+                f"Priority level should be an integer. Got {type(value)} instead."
             )
 
         if value < 1:
             raise ValueError(
-                f"priority level should be higher than 0. Got {value} instead."
+                f"Priority level should be higher than 0. Got {value} instead."
             )
 
         self._priority_level = value
@@ -171,11 +166,11 @@ class Process:
 
         if type(value) != int:
             raise TypeError(
-                f"arrival time should be an integer. Got {type(value)} instead."
+                f"Arrival time should be an integer. Got {type(value)} instead."
             )
 
         if value < 0:
-            raise ValueError(f"arrival time should be positive. Got {value} instead.")
+            raise ValueError(f"Arrival time should be positive. Got {value} instead.")
 
         self._arrival_time = value
 
@@ -198,11 +193,11 @@ class Process:
 
         if type(value) != int:
             raise TypeError(
-                f"wait time should be an integer. Got {type(value)} instead."
+                f"Wait time should be an integer. Got {type(value)} instead."
             )
 
         if value < 0:
-            raise ValueError(f"wait time should be positive. Got {value} instead.")
+            raise ValueError(f"Wait time should be positive. Got {value} instead.")
 
         self._wait_time = value
 
@@ -225,19 +220,19 @@ class Process:
 
         if type(value) != int:
             raise TypeError(
-                f"remaining execution time should be an integer. Got {type(value)} instead."
+                f"Remaining execution time should be an integer. Got {type(value)} instead."
             )
 
         if value < 0:
             raise ValueError(
-                f"remaining execution time should be positive. Got {value} instead."
+                f"Remaining execution time should be positive. Got {value} instead."
             )
 
         self._remaining_execution_time = value
 
     @property
-    def total_runtime(self) -> int:
-        """int: The total runtime of the process, which is the sum of execution and waiting time."""
+    def turnaround_time(self) -> int:
+        """int: The interval between arrival and completion time."""
         return self.execution_time + self.wait_time
 
     @property
@@ -256,9 +251,21 @@ class Process:
             ValueError: If the value is not a valid ProcessStatus enum.
         """
 
-        if type(value) == ProcessStatus:
+        if not isinstance(value, ProcessStatus):
             raise TypeError(
-                f"status should be a valid ProcessStatus value. Got {type(value)} instead."
+                f"Status should be a valid ProcessStatus value. Got {type(value)} instead."
             )
 
         self._status = value
+
+    def reset(self):
+        """Resets the process attributes for scheduling.
+
+        This method resets the process's wait time, remaining execution time, and
+        status to their initial values. After calling this method, the process is
+        ready to be scheduled again.
+        """
+
+        self.wait_time = 0
+        self.remaining_execution_time = self.execution_time
+        self.status = ProcessStatus.READY
