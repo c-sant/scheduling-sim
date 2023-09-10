@@ -59,6 +59,24 @@ class SchedulingAlgorithm:
 
         return sum([process.execution_time for process in self._processes])
 
+    @property
+    def average_turnaround_time(self) -> int:
+        self.run()
+
+        total_turnaround_time = sum(
+            [process.turnaround_time for process in self._processes]
+        )
+
+        return total_turnaround_time / len(self._processes)
+
+    @property
+    def average_wait_time(self) -> int:
+        self.run()
+
+        total_wait_time = sum([process.wait_time for process in self._processes])
+
+        return total_wait_time / len(self._processes)
+
     def reset(self):
         """Resets the scheduling algorithm and processes to their initial states."""
 
@@ -86,6 +104,7 @@ class SchedulingAlgorithm:
     def run(self) -> pd.DataFrame:
         """Execute the scheduling algorithm."""
 
+        self.reset()
         execution_report = pd.DataFrame()
 
         for step in range(self.total_execution_time + 1):
@@ -177,11 +196,11 @@ class SchedulingAlgorithm:
             self._current_running_process.remaining_execution_time -= 1
 
         for process in self._processes:
-            if process.status == ProcessStatus.READY and process.arrival_time == time:
-                process.status = ProcessStatus.WAITING
-
             if process.status == ProcessStatus.WAITING:
                 process.wait_time += 1
+
+            if process.status == ProcessStatus.READY and process.arrival_time == time:
+                process.status = ProcessStatus.WAITING
 
             if (
                 process.status == ProcessStatus.RUNNING
