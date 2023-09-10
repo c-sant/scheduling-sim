@@ -1,3 +1,5 @@
+import pandas as pd
+
 from scheduling_sim.exceptions import (
     InvalidProcessQueueError,
     NoProcessesInQueueError,
@@ -81,11 +83,40 @@ class SchedulingAlgorithm:
 
         self._processes.append(process)
 
-    def run(self):
+    def run(self) -> pd.DataFrame:
         """Execute the scheduling algorithm."""
+
+        execution_report = pd.DataFrame()
 
         for step in range(self.total_execution_time + 1):
             self._simulate_scheduling_step(step)
+
+            step_report = pd.DataFrame()
+
+            for process in self._processes:
+                process_report = pd.DataFrame(
+                    {
+                        "time": [step],
+                        "process_name": [process.name],
+                        "process_status": [process.status],
+                        "arrival_time": [process.arrival_time],
+                        "priority_level": [process.priority_level],
+                        "execution_time": [process.execution_time],
+                        "wait_time": [process.wait_time],
+                        "remaining_execution_time": [process.remaining_execution_time],
+                        "turnaround_time": [process.turnaround_time],
+                    }
+                )
+
+                step_report = pd.concat(
+                    [step_report, process_report], ignore_index=True
+                )
+
+            execution_report = pd.concat(
+                [execution_report, step_report], ignore_index=True
+            )
+
+        return execution_report
 
     def _simulate_scheduling_step(self, step: int):
         """Execute a step of the schedule.
@@ -149,6 +180,9 @@ class SchedulingAlgorithm:
             if process.status == ProcessStatus.READY and process.arrival_time == time:
                 process.status = ProcessStatus.WAITING
 
+            if process.status == ProcessStatus.WAITING:
+                process.wait_time += 1
+
             if (
                 process.status == ProcessStatus.RUNNING
                 and process.remaining_execution_time == 0
@@ -181,9 +215,8 @@ class SchedulingAlgorithm:
         ):
             return
 
-        self._current_running_process = self._ready_queue.pop()
+        self._current_running_process = self._ready_queue.pop(0)
         self._current_running_process.status = ProcessStatus.RUNNING
-        self._current_running_process.remaining_execution_time -= 1
 
     def _refresh_ready_queue(self):
         """Refresh the ready queue based on waiting processes.
