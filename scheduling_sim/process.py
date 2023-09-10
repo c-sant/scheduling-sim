@@ -10,7 +10,6 @@ class ProcessStatus(Enum):
         READY (str): The process is ready to execute.
         WAITING (str): The process is waiting to execute.
         RUNNING (str): The process is currently executing.
-        BLOCKED (str): The process is blocked and waiting for an event.
         TERMINATED (str): The process has completed execution.
     """
 
@@ -22,9 +21,6 @@ class ProcessStatus(Enum):
 
     RUNNING = "running"
     """The process is currently executing."""
-
-    BLOCKED = "blocked"
-    """The process is blocked and waiting for an event."""
 
     TERMINATED = "terminated"
     """The process has completed execution."""
