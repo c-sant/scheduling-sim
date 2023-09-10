@@ -7,3 +7,6 @@ __pycache__/
 
 # Sandbox files for experimental coding
 sandbox/
+
+# Visual Studio Code settings file
+.vscode
