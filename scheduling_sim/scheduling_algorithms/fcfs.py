@@ -1,11 +1,11 @@
 from scheduling_sim.process import Process, ProcessStatus
-from scheduling_sim.scheduling_algorithms.preemptive_scheduler import (
-    PreemptiveScheduler,
+from scheduling_sim.scheduling_algorithms.cooperative_scheduler import (
+    CooperativeScheduler,
 )
 
 
-class FirstComeFirstServeScheduler(PreemptiveScheduler):
-    algorithm_name = "First Come First Serve Scheduler"
+class FirstComeFirstServeScheduler(CooperativeScheduler):
+    algorithm_name: str = "First Come First Serve Scheduler"
 
     def _refresh_ready_queue(self):
         """Refresh the ready queue based on waiting processes.
