@@ -1,1 +1,1 @@
-from .scheduling_algorithm import SchedulingAlgorithm
+from .fcfs import FirstComeFirstServeScheduler
