@@ -4,10 +4,16 @@ from scheduling_sim.scheduling_algorithms.scheduling_algorithm import (
 
 
 class PreemptiveScheduler(SchedulingAlgorithm):
-    algorithm_name = "Preemptive Scheduler"
+    """
+    Represents a preemptive scheduling algorithm for managing a list of processes.
 
-    def _simulate_scheduling_step(self, step: int):
-        self._update_processes_statuses(step)
-        self._refresh_ready_queue()
-        self._determine_running_process_status()
-        self._determine_current_running_process()
+    This class is a subclass of the SchedulingAlgorithm class and is designed to
+    implement a preemptive scheduling algorithm. Preemptive scheduling allows the
+    scheduler to interrupt the execution of a running process and switch to another
+    process if a higher-priority process becomes available.
+
+    Attributes:
+        algorithm_name (str): The name of the preemptive scheduling algorithm.
+    """
+
+    algorithm_name: str = "Preemptive Scheduler"
