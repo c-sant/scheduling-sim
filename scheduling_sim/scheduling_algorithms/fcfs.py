@@ -1,10 +1,18 @@
-from scheduling_sim.process import Process, ProcessStatus
 from scheduling_sim.scheduling_algorithms.cooperative_scheduler import (
     CooperativeScheduler,
 )
 
 
 class FirstComeFirstServeScheduler(CooperativeScheduler):
+    """First Come First Serve Scheduler
+
+    This class represents a scheduling algorithm that executes processes in the
+    order they arrive. Non-preemptive.
+
+    Attributes:
+        algorithm_name (str): The name of the scheduling algorithm.
+    """
+
     algorithm_name: str = "First Come First Serve Scheduler"
 
     def _refresh_ready_queue(self):
