@@ -1,0 +1,25 @@
+name: PyTest
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.7.0
+        with:
+          python-version: 3.11  # Choose the Python version you want to use
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Adjust this to your project's setup
+
+      - name: Run Pytest
+        run: pytest
