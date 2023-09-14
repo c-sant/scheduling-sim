@@ -1,14 +1,14 @@
 # Simulador de Escalonador  de Processos
 
+![Test Status](https://github.com/c-sant/scheduling-sim/actions/workflows/pytest.yml/badge.svg)
+
 Um projeto desenvolvido em Python para simular algoritmos de escalonamento usados por
 sistemas operacionais.
 
 ## Tabela de Conteúdos
 
-- [Simulador de Escalonador  de Processos](#simulador-de-escalonador--de-processos)
-  - [Tabela de Conteúdos](#tabela-de-conteúdos)
-  - [Algoritmos Implementados](#algoritmos-implementados)
-  - [Instalação](#instalação)
+- [Algoritmos Implementados](#algoritmos-implementados)
+- [Instalação](#instalação)
 
 ## Algoritmos Implementados
 
