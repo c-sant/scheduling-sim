@@ -148,7 +148,6 @@ class SchedulingAlgorithm:
 
         self._update_processes_statuses(step)
         self._refresh_ready_queue()
-        self._determine_running_process_status()
         self._determine_current_running_process()
 
     def _assert_queue_validity(self):
@@ -213,20 +212,7 @@ class SchedulingAlgorithm:
                 and process.remaining_execution_time == 0
             ):
                 process.status = ProcessStatus.TERMINATED
-
-    def _determine_running_process_status(self):
-        """Determines the status of the currently running process and handle termination.
-
-        This method checks the status of the currently running process and handles its
-        transition to the TERMINATED state if its remaining execution time reaches zero.
-        """
-
-        if self._current_running_process == None:
-            return
-
-        if self._current_running_process.status == ProcessStatus.TERMINATED:
-            self._current_running_process = None
-
+                
     def _determine_current_running_process(self):
         """Determines the currently running process from the ready queue.
 

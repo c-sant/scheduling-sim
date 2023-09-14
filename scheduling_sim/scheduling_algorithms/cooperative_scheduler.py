@@ -17,9 +17,3 @@ class CooperativeScheduler(SchedulingAlgorithm):
     """
 
     algorithm_name: str = "Cooperative Scheduler"
-
-    def _simulate_scheduling_step(self, step: int):
-        self._update_processes_statuses(step)
-        self._refresh_ready_queue()
-        self._determine_running_process_status()
-        self._determine_current_running_process()
