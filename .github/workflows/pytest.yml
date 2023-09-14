@@ -3,14 +3,14 @@ name: PyTest
 on:
   push:
     branches:
-      - main
+      - master
 
   workflow_dispatch:
     inputs:
       branch:
         description: 'Executes workflow manually.'
         required: true
-        default: 'main'
+        default: 'master'
 
 jobs:
   build:
