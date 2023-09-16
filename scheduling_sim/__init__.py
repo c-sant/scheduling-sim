@@ -3,4 +3,5 @@ from .scheduling_algorithms import (
     FirstComeFirstServeScheduler,
     SchedulingAlgorithm,
     ShortestJobFirstScheduler,
+    PriorityCooperativeScheduler
 )
