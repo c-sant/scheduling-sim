@@ -243,6 +243,22 @@ class Process:
         return self.conclusion_time - self.arrival_time
 
     @property
+    def enqueue_time(self) -> int:
+        return self._enqueue_time
+
+    @enqueue_time.setter
+    def enqueue_time(self, value: int):
+        if type(value) != int:
+            raise TypeError(
+                f"Enqueue time should be an integer. Got {type(value)} instead."
+            )
+
+        if value < 0:
+            raise ValueError(f"Enqueue time should be positive. Got {value} instead.")
+
+        self._enqueue_time = value
+
+    @property
     def status(self) -> ProcessStatus:
         """ProcessStatus: The status of the process."""
         return self._status
@@ -288,5 +304,6 @@ class Process:
         """
 
         self.conclusion_time = self.arrival_time + self.execution_time
+        self.enqueue_time = self.arrival_time
         self.remaining_execution_time = self.execution_time
         self._status = ProcessStatus.READY

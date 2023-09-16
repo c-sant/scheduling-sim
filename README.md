@@ -7,8 +7,15 @@ sistemas operacionais.
 
 ## Tabela de Conteúdos
 
-- [Algoritmos Implementados](#algoritmos-implementados)
-- [Instalação](#instalação)
+  - [To-Do List](#to-do-list)
+  - [Algoritmos Implementados](#algoritmos-implementados)
+  - [Instalação](#instalação)
+
+## To-Do List
+
+- [ ] Implementar os algoritmos provisionados.
+- [ ] Adicionar testes para os algoritmos implementados.
+- [ ] Documentar todos os algoritmos implementados e suas classes de teste.
 
 ## Algoritmos Implementados
 
@@ -16,10 +23,10 @@ Até o momento, o simulador suporta os seguintes algoritmos:
 
 - [X] **FCFS**: First Come First Serve
 - [X] **SJF**: Shortest Job First
-- [ ] **SRTF**: Shortest Remaining Time First
+- [X] **SRTF**: Shortest Remaining Time First
 - [ ] **RR**: Round Robin
-- [ ] **PRIOc**: Priority (Cooperative)
-- [ ] **PRIOp**: Priority (Preemptive) 
+- [X] **PRIOc**: Priority (Cooperative)
+- [X] **PRIOp**: Priority (Preemptive) 
 
 ## Instalação
 

@@ -1,4 +1,5 @@
 from .fcfs import TestFirstComeFirstServeScheduler
 from .prioc import TestPriorityCooperativeScheduler
+from .priop import TestPriorityPreemptiveScheduler
 from .sjf import TestShortestJobFirstScheduler
 from .srtf import TestShortestRemainingTimeFirstScheduler

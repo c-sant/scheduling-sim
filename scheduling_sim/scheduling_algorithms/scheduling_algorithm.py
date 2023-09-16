@@ -219,6 +219,7 @@ class SchedulingAlgorithm:
                 process.is_ready and process.arrival_time == time
             ):
                 process.wait()
+                process.enqueue_time = time
 
             # if the current running Process has no remaining execution time, it
             # terminates
@@ -247,3 +248,5 @@ class SchedulingAlgorithm:
         self._ready_queue: list[Process] = [
             process for process in self._processes if process.is_waiting
         ]
+
+        self._ready_queue = sorted(self._ready_queue, key=lambda x: x.enqueue_time)
