@@ -1,10 +1,10 @@
 from scheduling_sim.process import Process
-from scheduling_sim.scheduling_algorithms.cooperative_scheduler import (
-    CooperativeScheduler,
+from scheduling_sim.scheduling_algorithms.scheduling_algorithm import (
+    SchedulingAlgorithm,
 )
 
 
-class PriorityCooperativeScheduler(CooperativeScheduler):
+class PriorityCooperativeScheduler(SchedulingAlgorithm):
     """Priority Cooperative Scheduler
 
     This class represents a scheduling algorithm that executes processes in the
@@ -16,8 +16,10 @@ class PriorityCooperativeScheduler(CooperativeScheduler):
 
     _use_reverse_priority: bool = True
     algorithm_name: str = "First Come First Serve Scheduler"
-    
-    def __init__(self, processes: list[Process] = None, use_reverse_priority: bool = True):
+
+    def __init__(
+        self, processes: list[Process] = None, use_reverse_priority: bool = True
+    ):
         super().__init__(processes)
         self.use_reverse_priority = use_reverse_priority
 

@@ -1,9 +1,9 @@
-from scheduling_sim.scheduling_algorithms.cooperative_scheduler import (
-    CooperativeScheduler,
+from scheduling_sim.scheduling_algorithms.scheduling_algorithm import (
+    SchedulingAlgorithm,
 )
 
 
-class ShortestJobFirstScheduler(CooperativeScheduler):
+class ShortestJobFirstScheduler(SchedulingAlgorithm):
     """Shortest Job First Scheduler
 
     This class represents a scheduling algorithm that schedules processes based

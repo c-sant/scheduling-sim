@@ -11,9 +11,9 @@ from scheduling_sim.process import Process, ProcessStatus
 class SchedulingAlgorithm:
     """Represents a generic scheduling algorithm for managing a list of processes.
 
-    This class serves as a template for implementing specific scheduling algorithms. It
-    provides basic functionality for managing processes and ensuring the validity of
-    process queues.
+    This class serves as a template for implementing specific scheduling algorithms.
+    It provides basic functionality for managing processes and ensuring the validity
+    of process queues.
 
     Attributes:
         algorithm_name (str): The name of the scheduling algorithm.
@@ -21,8 +21,9 @@ class SchedulingAlgorithm:
         total_execution_time (int): The total execution time of all processes.
 
     Methods:
-        reset(): Resets the scheduling algorithm and processes to their initial states.
-        add_process(process: Process): Adds a process to the scheduling algorithm.
+        reset(): Resets the scheduling algorithm and processes to their initial
+        states. add_process(process: Process): Adds a process to the scheduling
+        algorithm.
     """
 
     _processes: list[Process] = []
@@ -78,6 +79,19 @@ class SchedulingAlgorithm:
         total_wait_time = sum([process.wait_time for process in self._processes])
 
         return total_wait_time / len(self._processes)
+
+    @property
+    def ready_queue_is_empty(self) -> bool:
+        """bool: Whether or not the ready queue has no Process objects."""
+        return len(self._ready_queue) == 0
+
+    @property
+    def is_executing_a_process(self) -> bool:
+        """bool: Whether or not there is a process running at the moment."""
+        return (
+            self._current_running_process != None
+            and self._current_running_process.status == ProcessStatus.RUNNING
+        )
 
     def reset(self):
         """Resets the scheduling algorithm and processes to their initial states."""
@@ -185,34 +199,36 @@ class SchedulingAlgorithm:
     def _update_processes_statuses(self, time: int):
         """Updates the statuses of processes based on the current time.
 
-        This method updates the statuses of processes in the scheduling algorithm based
-        on their arrival times and remaining execution times. It handles transitions
-        between READY, WAITING, RUNNING, and TERMINATED states.
+        This method updates the statuses of processes in the scheduling algorithm
+        based on their arrival times and remaining execution times. It handles
+        transitions between READY, WAITING, RUNNING, INTERRUPTED and TERMINATED
+        states.
 
         Args:
             time (int): The current time.
         """
 
         # if there is a Process object currently running
-        if self._current_running_process != None:
+        if self.is_executing_a_process:
             self._current_running_process.remaining_execution_time -= 1
 
         for process in self._processes:
-            # if Process is waiting, adds to wait time
-            if process.status == ProcessStatus.WAITING:
-                process.wait_time += 1
-
-            # if Process is ready and arrives, it starts to wait
-            if process.status == ProcessStatus.READY and process.arrival_time == time:
+            # if Process has been interrupted or is ready and arrives, it starts
+            # to wait
+            if process.status == ProcessStatus.INTERRUPTED or (
+                process.status == ProcessStatus.READY and process.arrival_time == time
+            ):
                 process.status = ProcessStatus.WAITING
 
-            # if the current running Process has no remaining execution time, it terminates
+            # if the current running Process has no remaining execution time, it
+            # terminates
             if (
                 process.status == ProcessStatus.RUNNING
                 and process.remaining_execution_time == 0
             ):
                 process.status = ProcessStatus.TERMINATED
-                
+                process.conclusion_time = time
+
     def _determine_current_running_process(self):
         """Determines the currently running process from the ready queue.
 
@@ -220,22 +236,15 @@ class SchedulingAlgorithm:
         selects the next process to run from the ready queue (if there are any).
         """
 
-        no_process_is_running = (
-            self._current_running_process == None
-            or self._current_running_process.status == ProcessStatus.TERMINATED
-        )
-        
-        ready_queue_has_processes = len(self._ready_queue) > 0
-        
-        if no_process_is_running and ready_queue_has_processes:
+        if (not self.is_executing_a_process) and (not self.ready_queue_is_empty):
             self._current_running_process = self._ready_queue.pop(0)
             self._current_running_process.status = ProcessStatus.RUNNING
 
     def _refresh_ready_queue(self):
         """Refresh the ready queue based on waiting processes.
 
-        This method updates the ready queue by selecting processes with WAITING status
-        from the list of all processes in the scheduling algorithm.
+        This method updates the ready queue by selecting processes with WAITING
+        status from the list of all processes in the scheduling algorithm.
         """
 
         self._ready_queue: list[Process] = [

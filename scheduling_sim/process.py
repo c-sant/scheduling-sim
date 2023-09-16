@@ -19,6 +19,9 @@ class ProcessStatus(Enum):
     WAITING = "waiting"
     """The process is waiting to execute."""
 
+    INTERRUPTED = "interrupted"
+    """The process execution was interrupted."""
+
     RUNNING = "running"
     """The process is currently executing."""
 
@@ -171,16 +174,16 @@ class Process:
         self._arrival_time = value
 
     @property
-    def wait_time(self) -> int:
-        """int: The time the process has spent waiting in the ready queue."""
-        return self._wait_time
+    def conclusion_time(self) -> int:
+        """int: The instant when the process is concluded."""
+        return self._conclusion_time
 
-    @wait_time.setter
-    def wait_time(self, value: int):
-        """Sets the wait time of the process.
+    @conclusion_time.setter
+    def conclusion_time(self, value: int):
+        """Sets the conclusion time of the process.
 
         Args:
-            value (int): The wait time to set.
+            value (int): The conclusion time to set.
 
         Raises:
             TypeError: If the value is not an integer.
@@ -189,13 +192,20 @@ class Process:
 
         if type(value) != int:
             raise TypeError(
-                f"Wait time should be an integer. Got {type(value)} instead."
+                f"Conclusion time should be an integer. Got {type(value)} instead."
             )
 
         if value < 0:
-            raise ValueError(f"Wait time should be positive. Got {value} instead.")
+            raise ValueError(
+                f"Conclusion time should be positive. Got {value} instead."
+            )
 
-        self._wait_time = value
+        self._conclusion_time = value
+
+    @property
+    def wait_time(self) -> int:
+        """int: The time the process has spent waiting in the ready queue."""
+        return self.turnaround_time - self.execution_time
 
     @property
     def remaining_execution_time(self) -> int:
@@ -229,7 +239,7 @@ class Process:
     @property
     def turnaround_time(self) -> int:
         """int: The interval between arrival and completion time."""
-        return self.execution_time + self.wait_time
+        return self.conclusion_time - self.arrival_time
 
     @property
     def status(self) -> ProcessStatus:
@@ -262,6 +272,6 @@ class Process:
         ready to be scheduled again.
         """
 
-        self.wait_time = 0
+        self.conclusion_time = self.arrival_time + self.execution_time
         self.remaining_execution_time = self.execution_time
         self.status = ProcessStatus.READY

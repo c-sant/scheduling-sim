@@ -1,9 +1,9 @@
-from scheduling_sim.scheduling_algorithms.cooperative_scheduler import (
-    CooperativeScheduler,
+from scheduling_sim.scheduling_algorithms.scheduling_algorithm import (
+    SchedulingAlgorithm,
 )
 
 
-class FirstComeFirstServeScheduler(CooperativeScheduler):
+class FirstComeFirstServeScheduler(SchedulingAlgorithm):
     """First Come First Serve Scheduler
 
     This class represents a scheduling algorithm that executes processes in the
