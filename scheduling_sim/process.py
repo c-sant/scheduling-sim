@@ -4,11 +4,12 @@ from scheduling_sim.exceptions import InvalidProcessNameError
 
 
 class ProcessStatus(Enum):
-    """Enum representing the status of a process.
+    """Enumerator representing the status of a process.
 
     Attributes:
         READY (str): The process is ready to execute.
         WAITING (str): The process is waiting to execute.
+        INTERRUPTED (str): The process execution was interrupted.
         RUNNING (str): The process is currently executing.
         TERMINATED (str): The process has completed execution.
     """
@@ -246,23 +247,37 @@ class Process:
         """ProcessStatus: The status of the process."""
         return self._status
 
-    @status.setter
-    def status(self, value: ProcessStatus):
-        """Sets the status of the process.
+    @property
+    def is_ready(self) -> bool:
+        return self.status == ProcessStatus.READY
 
-        Args:
-            value (ProcessStatus): The status to set.
+    def run(self):
+        self._status = ProcessStatus.RUNNING
 
-        Raises:
-            ValueError: If the value is not a valid ProcessStatus enum.
-        """
+    @property
+    def is_running(self) -> bool:
+        return self.status == ProcessStatus.RUNNING
 
-        if not isinstance(value, ProcessStatus):
-            raise TypeError(
-                f"Status should be a valid ProcessStatus value. Got {type(value)} instead."
-            )
+    def wait(self):
+        self._status = ProcessStatus.WAITING
 
-        self._status = value
+    @property
+    def is_waiting(self) -> bool:
+        return self.status == ProcessStatus.WAITING
+
+    def interrupt(self):
+        self._status = ProcessStatus.INTERRUPTED
+
+    @property
+    def was_interrupted(self):
+        return self.status == ProcessStatus.INTERRUPTED
+
+    def conclude(self):
+        self._status = ProcessStatus.TERMINATED
+
+    @property
+    def is_terminated(self):
+        return self.status == ProcessStatus.TERMINATED
 
     def reset(self):
         """Resets the process attributes for scheduling.
@@ -274,4 +289,4 @@ class Process:
 
         self.conclusion_time = self.arrival_time + self.execution_time
         self.remaining_execution_time = self.execution_time
-        self.status = ProcessStatus.READY
+        self._status = ProcessStatus.READY

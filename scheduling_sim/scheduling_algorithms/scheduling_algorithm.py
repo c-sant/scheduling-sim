@@ -5,7 +5,7 @@ from scheduling_sim.exceptions import (
     NoProcessesInQueueError,
     NoProcessWithArrivalTimeZeroError,
 )
-from scheduling_sim.process import Process, ProcessStatus
+from scheduling_sim.process import Process
 
 
 class SchedulingAlgorithm:
@@ -90,7 +90,7 @@ class SchedulingAlgorithm:
         """bool: Whether or not there is a process running at the moment."""
         return (
             self._current_running_process != None
-            and self._current_running_process.status == ProcessStatus.RUNNING
+            and self._current_running_process.is_running
         )
 
     def reset(self):
@@ -215,18 +215,15 @@ class SchedulingAlgorithm:
         for process in self._processes:
             # if Process has been interrupted or is ready and arrives, it starts
             # to wait
-            if process.status == ProcessStatus.INTERRUPTED or (
-                process.status == ProcessStatus.READY and process.arrival_time == time
+            if process.was_interrupted or (
+                process.is_ready and process.arrival_time == time
             ):
-                process.status = ProcessStatus.WAITING
+                process.wait()
 
             # if the current running Process has no remaining execution time, it
             # terminates
-            if (
-                process.status == ProcessStatus.RUNNING
-                and process.remaining_execution_time == 0
-            ):
-                process.status = ProcessStatus.TERMINATED
+            if process.is_running and process.remaining_execution_time == 0:
+                process.conclude()
                 process.conclusion_time = time
 
     def _determine_current_running_process(self):
@@ -238,7 +235,7 @@ class SchedulingAlgorithm:
 
         if (not self.is_executing_a_process) and (not self.ready_queue_is_empty):
             self._current_running_process = self._ready_queue.pop(0)
-            self._current_running_process.status = ProcessStatus.RUNNING
+            self._current_running_process.run()
 
     def _refresh_ready_queue(self):
         """Refresh the ready queue based on waiting processes.
@@ -248,7 +245,5 @@ class SchedulingAlgorithm:
         """
 
         self._ready_queue: list[Process] = [
-            process
-            for process in self._processes
-            if process.status == ProcessStatus.WAITING
+            process for process in self._processes if process.is_waiting
         ]

@@ -1,4 +1,3 @@
-from scheduling_sim.process import ProcessStatus
 from scheduling_sim.scheduling_algorithms.sjf import ShortestJobFirstScheduler
 
 
@@ -12,6 +11,6 @@ class ShortestRemainingTimeFirstScheduler(ShortestJobFirstScheduler):
             and self._ready_queue[0].remaining_execution_time
             < self._current_running_process.remaining_execution_time
         ):
-            self._current_running_process.status = ProcessStatus.INTERRUPTED
+            self._current_running_process.interrupt()
 
         super()._determine_current_running_process()
