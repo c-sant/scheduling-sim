@@ -31,22 +31,38 @@ class ProcessStatus(Enum):
 
 
 class Process:
-    """The representation of a program in execution, a process is a lower-level
-    concept associated with Operational Systems. They have their own memory space,
-    system resources and execution context.
+    """The representation of a computer process.
 
-    Attributes:
+    A process as a lower-level concept is frequently associated with Operational
+    Systems. It's a program in the state of execution, and have it's own memory
+    space, system resources and execution context.
+
+    Methods:
+        reset(): Resets the process attributes for scheduling.
+        run(): Changes the process status to `running`.
+        wait(): Changes the process status to `waiting`.
+        interrupt(): Changes the process status to `interrupted`.
+        conclude(): Changes the process status to `terminated`.
+
+    Properties:
         name (str): The name of the process.
         execution_time (int): The time required for the process to complete execution.
-        turnaround_time (int): The interval between arrival and completion time.
-        priority_level (int): The priority level of the process, used in scheduling
-        algorithms.
+        priority_level (int): The priority level of the process.
         arrival_time (int): The time at which the process arrives and becomes ready
         for execution.
+        conclusion_time (int): The instant when the process is concluded.
         wait_time (int): The time the process has spent waiting in the ready queue.
         remaining_execution_time (int): The time remaining for the process to complete
+        turnaround_time (int): The interval between arrival and completion time.
         execution.
+        enqueue_time (int): The time when the process is enquede in the ready queue.
         status (ProcessStatus): The status of the process.
+        is_ready (bool): Whether the process is in the ready state.
+        is_running (bool): Whether the process is in the running state.
+        is_waiting (bool): Whether the process is in the waiting state.
+        was_interrupted (bool): Whether the process was interrupted.
+        is_terminated (bool): Whether the process is terminated.
+        quantum_progress (int): The progress made within the quantum time slice.
     """
 
     def __init__(
@@ -65,6 +81,17 @@ class Process:
 
     def __repr__(self) -> str:
         return f"Process({self.name})"
+
+    def reset(self):
+        """Resets the process properties for scheduling."""
+
+        self.conclusion_time = self.arrival_time + self.execution_time
+        self.enqueue_time = self.arrival_time
+        self.remaining_execution_time = self.execution_time
+        self._quantum_progress = 0
+        self._status = ProcessStatus.READY
+
+    # Process attributes
 
     @property
     def name(self) -> str:
@@ -88,35 +115,6 @@ class Process:
             raise InvalidProcessNameError(value)
 
         self._name = str(value)
-
-    @property
-    def execution_time(self) -> int:
-        """int: The time required for the process to complete execution."""
-        return self._execution_time
-
-    @execution_time.setter
-    def execution_time(self, value: int):
-        """Sets the execution time of the process.
-
-        Args:
-            value (int): The execution time to set.
-
-        Raises:
-            TypeError: If the value is not an integer.
-            ValueError: If the value is less than 1.
-        """
-
-        if type(value) != int:
-            raise TypeError(
-                f"Process execution time should be an integer. Got {type(value)} instead."
-            )
-
-        if value < 1:
-            raise ValueError(
-                f"Execution time should be higher than 0. Got {value} instead."
-            )
-
-        self._execution_time = value
 
     @property
     def priority_level(self) -> int:
@@ -146,6 +144,37 @@ class Process:
             )
 
         self._priority_level = value
+
+    # Execution attributes
+
+    @property
+    def execution_time(self) -> int:
+        """int: The time required for the process to complete execution."""
+        return self._execution_time
+
+    @execution_time.setter
+    def execution_time(self, value: int):
+        """Sets the execution time of the process.
+
+        Args:
+            value (int): The execution time to set.
+
+        Raises:
+            TypeError: If the value is not an integer.
+            ValueError: If the value is less than 1.
+        """
+
+        if type(value) != int:
+            raise TypeError(
+                f"Process execution time should be an integer. Got {type(value)} instead."
+            )
+
+        if value < 1:
+            raise ValueError(
+                f"Execution time should be higher than 0. Got {value} instead."
+            )
+
+        self._execution_time = value
 
     @property
     def arrival_time(self) -> int:
@@ -259,48 +288,21 @@ class Process:
         self._enqueue_time = value
 
     @property
-    def status(self) -> ProcessStatus:
-        """ProcessStatus: The status of the process."""
-        return self._status
-
-    @property
-    def is_ready(self) -> bool:
-        return self.status == ProcessStatus.READY
-
-    def run(self):
-        self._status = ProcessStatus.RUNNING
-
-    @property
-    def is_running(self) -> bool:
-        return self.status == ProcessStatus.RUNNING
-
-    def wait(self):
-        self._status = ProcessStatus.WAITING
-
-    @property
-    def is_waiting(self) -> bool:
-        return self.status == ProcessStatus.WAITING
-
-    def interrupt(self):
-        self._status = ProcessStatus.INTERRUPTED
-
-    @property
-    def was_interrupted(self):
-        return self.status == ProcessStatus.INTERRUPTED
-
-    def conclude(self):
-        self._status = ProcessStatus.TERMINATED
-
-    @property
-    def is_terminated(self):
-        return self.status == ProcessStatus.TERMINATED
-
-    @property
     def quantum_progress(self):
+        """int: The progress made within the current quantum."""
         return self._quantum_progress
 
     @quantum_progress.setter
     def quantum_progress(self, value: int):
+        """The progress made within the current quantum.
+
+        Args:
+            value (int): The quantum progress value to set.
+
+        Raises:
+            TypeError: If the value is not an integer.
+            ValueError: If the value is negative.
+        """
         if type(value) != int:
             raise TypeError(
                 f"Quantum progress should be an integer. Got {type(value)} instead."
@@ -313,16 +315,50 @@ class Process:
 
         self._quantum_progress = value
 
-    def reset(self):
-        """Resets the process attributes for scheduling.
+    # Status attributes
 
-        This method resets the process's wait time, remaining execution time, and
-        status to their initial values. After calling this method, the process is
-        ready to be scheduled again.
-        """
+    @property
+    def status(self) -> ProcessStatus:
+        """ProcessStatus: The status of the process."""
+        return self._status
 
-        self.conclusion_time = self.arrival_time + self.execution_time
-        self.enqueue_time = self.arrival_time
-        self.remaining_execution_time = self.execution_time
-        self._quantum_progress = 0
-        self._status = ProcessStatus.READY
+    @property
+    def is_ready(self) -> bool:
+        """bool: Whether the process is in the `ready` state."""
+        return self.status == ProcessStatus.READY
+
+    @property
+    def is_running(self) -> bool:
+        """bool: Whether the process is in the `running` state."""
+        return self.status == ProcessStatus.RUNNING
+
+    @property
+    def is_waiting(self) -> bool:
+        """bool: Whether the process is in the `waiting` state."""
+        return self.status == ProcessStatus.WAITING
+
+    @property
+    def was_interrupted(self):
+        """bool: Whether the process is in the `interrupted` state."""
+        return self.status == ProcessStatus.INTERRUPTED
+
+    @property
+    def is_terminated(self):
+        """bool: Whether the process is in the `terminated` state."""
+        return self.status == ProcessStatus.TERMINATED
+
+    def run(self):
+        """Changes the process status to `running`."""
+        self._status = ProcessStatus.RUNNING
+
+    def wait(self):
+        """Changes the process status to `waiting`."""
+        self._status = ProcessStatus.WAITING
+
+    def interrupt(self):
+        """Changes the process status to `interrupted`."""
+        self._status = ProcessStatus.INTERRUPTED
+
+    def conclude(self):
+        """Changes the process status to `terminated`."""
+        self._status = ProcessStatus.TERMINATED

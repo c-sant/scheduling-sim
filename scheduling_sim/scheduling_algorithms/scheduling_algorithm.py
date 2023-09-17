@@ -22,8 +22,19 @@ class SchedulingAlgorithm:
 
     Methods:
         reset(): Resets the scheduling algorithm and processes to their initial
-        states. add_process(process: Process): Adds a process to the scheduling
-        algorithm.
+        states.
+        add_process(process: Process): Adds a process to the scheduling algorithm.
+        run() -> pd.DataFrame: Executes the scheduling algorithm.
+
+    Properties:
+        number_of_processes (int): The number of processes in the scheduling algorithm.
+        total_execution_time (int): The total execution time of all processes.
+        average_turnaround_time (float): The average turnaround time of all processes.
+        average_wait_time (float): The average wait time of all processes.
+        ready_queue_is_empty (bool): Whether or not the ready queue has no Process
+        objects.
+        is_executing_a_process (bool): Whether or not there is a process running
+        at the moment.
     """
 
     _processes: list[Process] = []
@@ -145,6 +156,15 @@ class SchedulingAlgorithm:
         self._determine_current_running_process()
 
     def _report_step_status(self, step: int) -> pd.DataFrame:
+        """Reports the status of processes at the current step.
+
+        Args:
+            step (int): The current step.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the step's process status report.
+        """
+
         step_report = pd.DataFrame()
 
         for process in self._processes:
