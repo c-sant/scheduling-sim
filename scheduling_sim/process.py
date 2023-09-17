@@ -295,6 +295,24 @@ class Process:
     def is_terminated(self):
         return self.status == ProcessStatus.TERMINATED
 
+    @property
+    def quantum_progress(self):
+        return self._quantum_progress
+
+    @quantum_progress.setter
+    def quantum_progress(self, value: int):
+        if type(value) != int:
+            raise TypeError(
+                f"Quantum progress should be an integer. Got {type(value)} instead."
+            )
+
+        if value < 0:
+            raise ValueError(
+                f"Quantum progress should be positive. Got {value} instead."
+            )
+
+        self._quantum_progress = value
+
     def reset(self):
         """Resets the process attributes for scheduling.
 
@@ -306,4 +324,5 @@ class Process:
         self.conclusion_time = self.arrival_time + self.execution_time
         self.enqueue_time = self.arrival_time
         self.remaining_execution_time = self.execution_time
+        self._quantum_progress = 0
         self._status = ProcessStatus.READY

@@ -125,27 +125,7 @@ class SchedulingAlgorithm:
 
         for step in range(self.total_execution_time + 1):
             self._simulate_scheduling_step(step)
-
-            step_report = pd.DataFrame()
-
-            for process in self._processes:
-                process_report = pd.DataFrame(
-                    {
-                        "time": [step],
-                        "process_name": [process.name],
-                        "process_status": [process.status],
-                        "arrival_time": [process.arrival_time],
-                        "priority_level": [process.priority_level],
-                        "execution_time": [process.execution_time],
-                        "wait_time": [process.wait_time],
-                        "remaining_execution_time": [process.remaining_execution_time],
-                        "turnaround_time": [process.turnaround_time],
-                    }
-                )
-
-                step_report = pd.concat(
-                    [step_report, process_report], ignore_index=True
-                )
+            step_report = self._report_step_status(step)
 
             execution_report = pd.concat(
                 [execution_report, step_report], ignore_index=True
@@ -163,6 +143,24 @@ class SchedulingAlgorithm:
         self._update_processes_statuses(step)
         self._refresh_ready_queue()
         self._determine_current_running_process()
+
+    def _report_step_status(self, step: int) -> pd.DataFrame:
+        step_report = pd.DataFrame()
+
+        for process in self._processes:
+            process_report = pd.DataFrame(
+                {
+                    "time": [step],
+                    "process_name": [process.name],
+                    "process_status": [process.status],
+                    "remaining_execution_time": [process.remaining_execution_time],
+                    "quantum_progress": [process.quantum_progress],
+                }
+            )
+
+            step_report = pd.concat([step_report, process_report], ignore_index=True)
+
+        return step_report
 
     def _assert_queue_validity(self):
         """Validates the integrity of process queues.
