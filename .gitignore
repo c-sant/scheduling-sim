@@ -10,3 +10,6 @@ sandbox/
 
 # Visual Studio Code settings file
 .vscode
+
+# Data folder
+data/
