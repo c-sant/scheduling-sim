@@ -1,26 +1,28 @@
-# Simulador de Escalonador  de Processos
+# Process Scheduler Simulator
 
 ![Test Status](https://github.com/c-sant/scheduling-sim/actions/workflows/pytest.yml/badge.svg)
 
-Um projeto desenvolvido em Python para simular algoritmos de escalonamento usados por
-sistemas operacionais.
+A Python project developed to simulate scheduling algorithms used by Operational
+Systems.
 
-## Tabela de Conteúdos
+## Table of Contents
 
   - [To-Do List](#to-do-list)
-  - [Algoritmos Implementados](#algoritmos-implementados)
-  - [Instalação](#instalação)
+  - [Implemented Algorithms](#implemented-algorithms)
+  - [Instalation](#instalation)
 
 ## To-Do List
 
-- [X] Implementar os algoritmos provisionados.
-- [X] Adicionar testes para os algoritmos implementados.
-- [X] Documentar todos os algoritmos implementados e suas classes de teste.
-- [ ] Adicionar interface para uso do programa.
+- [X] Implement provisioned algorithms.
+- [X] Add documentation for the implemented algorithms.
+- [X] Create tests for the implemented algorithms
+- [X] Add documentation for the test classes.
+- [X] Make a Graphical User Interface.
+- [ ] Add documentation for the Graphical User Interface.
 
-## Algoritmos Implementados
+## Implemented Algorithms
 
-Até o momento, o simulador suporta os seguintes algoritmos:
+So far, the simulator supports the following algorithms:
 
 - [X] **FCFS**: First Come First Serve
 - [X] **SJF**: Shortest Job First
@@ -29,42 +31,45 @@ Até o momento, o simulador suporta os seguintes algoritmos:
 - [X] **PRIOc**: Priority (Cooperative)
 - [X] **PRIOp**: Priority (Preemptive) 
 
-## Instalação
+## Instalation
 
-1. Clone o repositório em sua máquina local.
+1. Clone the repository to your local machine.
 
 ```shell
 git clone https://github.com/c-sant/scheduling-sim.git
 ```
 
-2. Acesse o diretório do projeto.
+2. Access the project directory.
 
 ```shell
 cd scheduling-sim
 ```
 
-3. Crie um ambiente virtual (opcional, mas recomendado):
+3. Create a virtual environment (optional, yet recommended):
 
 ```shell
 python -m venv venv
 ```
 
-4. Ative seu ambiente virtual:
+4. Activate your virtual environment:
 
-* No Windows:
+* For Windows:
 
 ```shell
 venv\Scripts\activate
 ```
 
-* No macOS e no Linux:
+* For macOS and Linux:
 
 ```shell
 source venv/bin/activate
 ```
 
-5. Instale as dependências do projeto:
+5. Install project dependencies:
 
 ```shell
 pip install -r requirements.txt
 ```
+
+After all these steps, the project should be good to go. Just execute the `main.py`
+file and the user interface will be shown.
