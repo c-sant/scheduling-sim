@@ -172,7 +172,7 @@ class SchedulingAlgorithm:
                 {
                     "time": [step],
                     "process_name": [process.name],
-                    "process_status": [process.status],
+                    "process_status": [process.status.value],
                     "remaining_execution_time": [process.remaining_execution_time],
                     "quantum_progress": [process.quantum_progress],
                 }

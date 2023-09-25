@@ -1,19 +1,23 @@
+import ctypes
 import os
+import platform
 import re
 
 import pandas as pd
 import PySimpleGUI as sg
+from matplotlib import pyplot as plt
 
-from scheduling_sim import (
+from scheduling_sim.process import Process
+from scheduling_sim.scheduling_algorithms import (
     FirstComeFirstServeScheduler,
     PriorityCooperativeScheduler,
     PriorityPreemptiveScheduler,
-    Process,
     RoundRobinScheduler,
     SchedulingAlgorithm,
     ShortestJobFirstScheduler,
     ShortestRemainingTimeFirstScheduler,
 )
+from scheduling_sim.utils import fade_color
 
 
 class SchedulingSimulatorAPP:
@@ -27,6 +31,7 @@ class SchedulingSimulatorAPP:
     }
 
     def __init__(self):
+        self._enable_dpi_awareness()
         self._set_default_values()
         self._build_layout()
 
@@ -216,3 +221,57 @@ class SchedulingSimulatorAPP:
 
         execution_report = scheduler.run()
         execution_report.to_excel(file_path, index=False)
+        self._plot_execution_report(execution_report)
+
+    def _plot_execution_report(self, execution_report: pd.DataFrame):
+        execution_report = execution_report.loc[
+            ~execution_report["process_status"].isin(("Ready", "Terminated"))
+        ]
+
+        processes = execution_report["process_name"].unique().tolist()
+        process_colors = self._assign_process_colors(processes)
+
+        fig, ax = plt.subplots(figsize=(10, 4))
+
+        for row in execution_report.to_dict(orient="records"):
+            process = row["process_name"]
+            color = process_colors[process]
+
+            if row["process_status"] == "Running":
+                bar_color = color
+                edge_color = "black"
+
+            else:
+                bar_color = fade_color(color)
+                edge_color = None
+
+            ax.barh(
+                process,
+                width=1,
+                height=0.5,
+                left=row["time"],
+                color=bar_color,
+                edgecolor=edge_color,
+            )
+
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Process")
+        ax.grid(False)
+        ax.set_title("Process Schedule")
+
+        fig_path = os.path.join(self._output_path, "schedule.png")
+        plt.savefig(fig_path)
+
+    def _assign_process_colors(self, processes: list[str]) -> dict[str, str]:
+        palette = ["#316AD0", "#E4E32B", "#9650CB", "#4BDA3D", "#E0323C"]
+
+        process_colors = {}
+        for i, process in enumerate(processes):
+            color_index = i % len(palette)
+            process_colors[process] = palette[color_index]
+
+        return process_colors
+
+    def _enable_dpi_awareness(self):
+        if int(platform.release()) >= 8:
+            ctypes.windll.shcore.SetProcessDpiAwareness(True)

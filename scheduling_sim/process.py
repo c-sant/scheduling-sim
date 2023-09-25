@@ -14,19 +14,19 @@ class ProcessStatus(Enum):
         TERMINATED (str): The process has completed execution.
     """
 
-    READY = "ready"
+    READY = "Ready"
     """The process is ready to execute."""
 
-    WAITING = "waiting"
+    WAITING = "Waiting"
     """The process is waiting to execute."""
 
-    INTERRUPTED = "interrupted"
+    INTERRUPTED = "Interrupted"
     """The process execution was interrupted."""
 
-    RUNNING = "running"
+    RUNNING = "Running"
     """The process is currently executing."""
 
-    TERMINATED = "terminated"
+    TERMINATED = "Terminated"
     """The process has completed execution."""
 
 
