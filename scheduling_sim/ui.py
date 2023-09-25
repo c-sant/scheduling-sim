@@ -32,6 +32,7 @@ class SchedulingSimulatorAPP:
 
     def __init__(self):
         self._enable_dpi_awareness()
+        self._set_theme()
         self._set_default_values()
         self._build_layout()
 
@@ -164,6 +165,9 @@ class SchedulingSimulatorAPP:
                 ),
             ],
         ]
+
+    def _set_theme(self):
+        sg.theme("DarkTanBlue")
 
     def _update_metrics(self, window: sg.Window, values: dict[str,]):
         scheduler = self._create_scheduler()
