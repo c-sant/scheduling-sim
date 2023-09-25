@@ -1,6 +1,7 @@
 # Process Scheduler Simulator
 
 ![Test Status](https://github.com/c-sant/scheduling-sim/actions/workflows/pytest.yml/badge.svg)
+
 Python version: **3.11**
 
 A Python project developed to simulate scheduling algorithms used by Operational
