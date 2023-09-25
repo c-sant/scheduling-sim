@@ -76,7 +76,7 @@ class SchedulingSimulatorAPP:
             if event == "-EXECUTE-":
                 self._update_metrics(window, values)
                 self._export_execution_report()
-
+                sg.popup("Scheduling report generated successfully.", title="Success")
         window.close()
 
     def _set_default_values(self):
